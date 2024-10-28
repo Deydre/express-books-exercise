@@ -1,7 +1,7 @@
-const books = require('./data/books.json');
+const books = require('./data/books.json'); // Importamos el array de objetos
 
 const express = require("express"); // Importamos el paquete express
-const app = express(); // Inciializar servidor con express
+const app = express(); // Incializar servidor con express
 const port = 3000; // Puerto a usar por el servidor
 
 app.use(express.json()); // Middleware para parsear el body de las peticiones
@@ -70,7 +70,7 @@ app.get("/year&pages/cervantes", (req, res) => {
 
 // 8. Crea una ruta /country/count/spain para obtener EL NÚMERO DE LIBROS de España
 // GET http://localhost:3000/country/count/spain
-app.get("/country/count/spain", (req, res) => {
+app.get("/country/count/spain", (req, res) => { // Aplicar filter + reduce
     let counter = 0;
     books.forEach(book => {
         book.country ==='Spain' ? counter++ : ""
@@ -81,18 +81,17 @@ app.get("/country/count/spain", (req, res) => {
 // Crea una ruta /country/at-least/germany para obtener VERDADERO O FALSO dependiendo de si hay o no un libro de Alemania
 // GET http://localhost:3000/country/at-least/germany
 app.get("/country/at-least/germany", (req, res) => {
-    let oneGerman = false;
-    books.forEach(book => {
-        book.country === 'Germany' ? oneGerman = true : "";
+    books.forEach(book => { // Refactorizar a método some
+        book.country === 'Germany' ? res.status(200).json(true) : "";
     })
-    res.status(200).json(oneGerman);
+    res.status(200).json(false)
 });
 
 // Crea una ruta /pages/all-greater/200 para obtener VERDADERO O FALSO dependiendo de si todos los libros tienen más de 200 páginas
 // GET http://localhost:3000/pages/all-greater/200
 app.get("/pages/all-greater/200", (req, res) => {
     let allMoreThan100 = true;
-    books.forEach(book => { 
+    books.forEach(book => {  // Refactorizar a método every
         book.pages < 200 ?  allMoreThan100 = false : "";
     })
     res.status(200).json(allMoreThan100);
